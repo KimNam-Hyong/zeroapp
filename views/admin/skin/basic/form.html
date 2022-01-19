@@ -1,0 +1,56 @@
+{% extends "../../layout.html" %}
+{% block style %}
+<style>
+.ck-editor__editable{
+    height:300px
+}
+</style>
+{% endblock %}
+{% block content%}    
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <h2>{{title}}</h2>
+                <form name="form" method="post" action="/admin/{{bo_id}}/form" onsubmit="return formCheck()">
+                    <input type="hidden" name="mode" value="{{query.mode}}">
+                    <input type="hidden" name="page" value="{{query.page}}">
+                    <input type="hidden" name="field" value="{{query.field}}">
+                    <input type="hidden" name="value" value="{{query.value}}">
+                    <input type="hidden" name="id" value="{{query.id}}">
+                    <div class="mb-3">
+                        <label for="bo_id" class="form-label">제목</label>
+                        <input type="text" name="bo_subject" id="bo_subject" value="{{row.bo_subject}}" class="form-control" required placeholder="제목을 입력하세요"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">이름</label>
+                        <input type="text" name="user_name" id="user_name" value="{{row.user_name}}" class="form-control" required placeholder="게시판명을 입력하세요"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">내용</label>
+                        <textarea name="bo_content" id="bo_content" required class="form-control" rows="5">{{row.bo_content}}</textarea>
+                    </div>
+                    
+                    
+                    
+                </form>
+                
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+        </div> 
+{% endblock %}
+{% block script %}
+
+{% endblock %}
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+{% extends "../layout.html" %}
+{% block style %}
+{% endblock %}
+{% block content%}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>{{title}}</h2>
+        </div>
+    </div>
+    <div class="row">
+        {{msg}}
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+    document.querySelector("#btn-login").addEventListener("click",async ()=>{
+        const user_id=document.getElementById("user-id").value;
+        const user_password = document.getElementById("user-password").value;
+        const uuid = document.getElementById("uuid").value;
+        await axios.post(`/app/auth/auth`,{user_id:user_id,user_password:user_password,uuid:uuid})
+        .then((res) => {
+            console.log(res.data.success);
+            if(res.data.success==false){
+                document.getElementById("login-info").innerHTML=`<font color='red'>${res.data.msg}</font>`;
+            }else{
+                document.getElementById("login-info").innerHTML=``;
+                location.href="/app";
+            }
+            //console.log(res);
+        });
+    });
+</script>
+{% endblock %}

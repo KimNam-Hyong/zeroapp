@@ -1,0 +1,31 @@
+{% extends "../layout.html" %}
+{% block style %}
+{% endblock %}
+{% block content%}
+<div class="container item-list">
+    {% for row in row %}
+    <div class="row" onclick="location.href='/app/service/view/?id={{row.id}}';">
+        <div class="row">
+            <div class="item-image">
+                {% if row.service_photo1 != "" %}
+                <img src="/uploads/{{row.service_photo1}}" class="img-fluid">
+                {% else %}
+                <div class="no-image">NO IMAGE</div>
+                {% endif %}
+            </div>
+            <div class="item-subject">
+                {{row.service_name}}
+            </div>
+            <div class="item-price">
+                {{row.service_price}}원
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+{% block script %}
+{% endblock %}
+
+

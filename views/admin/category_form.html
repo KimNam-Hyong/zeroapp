@@ -1,0 +1,56 @@
+{% extends "./layout.html" %}
+{% block style %}
+<style>
+    .ck-editor__editable{
+        height:300px
+    }
+</style>
+{% endblock %}
+{% block content%}
+    
+    
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+           
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <h2>{{title}}</h2>
+                <form name="form" method="post" action="/admin/category_form" onsubmit="return formCheck()">
+                    <input type="hidden" name="mode" value="{{mode}}">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="ca_code" name="ca_code" value="{{ca_code}}" placeholder="분류코드" required>
+                        <label for="floatingInput">분류코드</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="ca_name" name="ca_name" value="{{row.ca_name}}"  placeholder="분류명" required>
+                        <label for="floatingInput">분류명</label>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">확인</button>
+                    </div>
+                </form>
+                
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+        </div> 
+{% endblock %}
+{% block script %}
+<script>
+	
+    function formCheck(){
+        
+    }        
+</script>
+{% endblock %}
+
+
+    
+</body>
+
+</html>

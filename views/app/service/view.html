@@ -1,0 +1,92 @@
+{% extends "../layout.html" %}
+
+{% block style %}
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/swiper@7/swiper-bundle.min.css"
+/>
+<style>
+   
+.swiper {
+  width: 100%;
+  height: 300px;
+}
+.swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+      .swiper-slide img {
+        display: block;
+        width: 100%;
+        height:300px;
+        object-fit: cover;
+      }
+</style>
+{% endblock %}
+{% block content%}
+
+
+<div class="container">
+    <!--  swiper 시작-->
+    <!-- Slider main container -->
+    <div class="swiper">
+        {% set servicePhotos = [row.service_photo1,row.service_photo2,row.service_photo3,row.service_photo4,row.service_photo5]%}
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            {% for i in range(0,5) %}
+            {% if servicePhotos[i] != ""%}
+            <div class="swiper-slide"><img src="/uploads/{{servicePhotos[i]}}"></div>
+            {% endif %}
+            {% endfor %}
+            
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+    <!-- swiper 끝 -->
+    <div class="row">
+        <div class="item-subject text-center">
+            [{{row.service_name}}]
+        </div>
+        <div class="item-price">{{row.service_price}}원</div>
+        <div class="item-info">
+            <!-- html을 표현하기 위해서는 |safe가 필요-->
+            {{row.service_info|safe}}
+        </div>
+    </div>
+</div>
+<div class="bottom-request">
+    <a href="/app/service/request/?id={{row.id}}" class="btn btn-primary col-12" style="color:#fff">예약하기</a>
+</div>
+{% endblock %}
+{% block script %}
+<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+<script type="text/javascript">
+    const swiper = new Swiper('.swiper', {
+        loop: true,
+        // If we need pagination
+        pagination: {
+            el: '.swiper-pagination',
+        },
+
+       
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "../layout.html" %}
+{% block style %}
+{% endblock %}
+{% block content%}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>회원로그인</h2>
+        </div>
+    </div>
+    <form name="form" method="post" action="/app/user/auth">
+        <input type="hidden" name="uuid" id="uuid" value="{{ip}}">
+        <div class="mb-3">
+            <label for="user-id" class="form-label">이메일주소</label>
+            <input type="text" name="user_id" id="user-id" value="" class="form-control" required placeholder="이메일 주소를 입력하세요"/>
+        </div>
+        <div class="mb-3">
+            <label for="user-password" class="form-label">비밀번호</label>
+            <input type="password" name="user_password" id="user-password" value="" class="form-control" required placeholder="비밀번호를 입력하세요"/>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="button" id="btn-login">로그인</button>
+            <a href="/app/user/register" class="btn btn-primary">회원가입</a>
+        </div>
+        <div class="mb-3">
+            <div id="login-info" class="text-center"></div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+    //로그인...
+    document.querySelector("#btn-login").addEventListener("click",async ()=>{
+        const user_id=document.getElementById("user-id").value;
+        const user_password = document.getElementById("user-password").value;
+        const uuid = document.getElementById("uuid").value;
+        await axios.post(`/app/auth/auth`,{user_id:user_id,user_password:user_password,uuid:uuid})
+        .then((res) => {
+            console.log(res.data.success);
+            if(res.data.success==false){
+                document.getElementById("login-info").innerHTML=`<font color='red'>${res.data.msg}</font>`;
+            }else{
+                document.getElementById("login-info").innerHTML=``;
+                location.href="/app";
+            }
+            //console.log(res);
+        });
+    });
+</script>
+{% endblock %}

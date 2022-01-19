@@ -1,0 +1,133 @@
+footer div {
+  text-align: center;
+  background-color: #000;
+  color: #ccc;
+  font-size: 12px;
+}
+a:link,
+a:visited {
+  color: #000;
+  text-decoration: none;
+}
+a:hover,
+a:focus,
+a:active {
+  color: #000;
+  text-decoration: underline;
+}
+.install-title {
+  margin: 20px;
+  font-size: 1.5em;
+}
+.header .menu {
+  width: 10%;
+  float: left;
+  height: 50px;
+  background-color: cornflowerblue;
+  font-size: 35px;
+  line-height: 50px;
+  color: #fff;
+  padding-left: 20px;
+}
+.header .title {
+  width: 100%;
+  height: 50px;
+  background-color: cornflowerblue;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  line-height: 50px;
+}
+
+.side-bar {
+  position: fixed;
+  z-index: 9999;
+  left: -80%;
+  border-left: 1px solid #ccc;
+  width: 80%;
+  background-color: white;
+  top: 0px;
+  height: 100%;
+}
+.side-bar-back {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  display: none;
+  z-index: 9998;
+}
+.user-info {
+  width: 100%;
+  height: 120px;
+  background-color: rgb(34, 6, 6);
+  padding: 20px;
+}
+
+.user-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: cornsilk;
+  text-align: center;
+  line-height: 50px;
+}
+.user-push {
+  color: #fff;
+  text-align: right;
+  font-size: 2em;
+}
+.user-join-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: cornsilk;
+  text-align: center;
+  line-height: 50px;
+  margin: 0 auto;
+}
+.category {
+  padding: 10px 5px 0px 5px;
+  font-weight: bold;
+}
+
+.com-info {
+  padding: 10px;
+}
+
+.item-image {
+  max-height: 200px;
+  overflow-y: hidden;
+  padding: 10px;
+}
+
+.item-subject {
+  font-size: 20px;
+  font-weight: bold;
+}
+.item-price {
+  color: darkcyan;
+  font-size: 18px;
+  text-align: center;
+}
+.item-list {
+  display: block;
+  min-height: 520px;
+}
+.item-info {
+  overflow: hidden;
+}
+.item-info img {
+  width: 100%;
+}
+
+.no-image {
+  border: 1px solid #ccc;
+  background-color: darkgray;
+  text-align: center;
+  font-size: 20px;
+  height: 120px;
+  line-height: 120px;
+}

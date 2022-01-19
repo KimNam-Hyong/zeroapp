@@ -1,0 +1,186 @@
+{% extends "./layout.html" %}
+{% block style %}
+<style>
+    .ck-editor__editable{
+        height:300px
+    }
+</style>
+{% endblock %}
+{% block content%}
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+           
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <form name="form_list" id="form-list" method="post" action="/admin/board_setting_list_update">
+            <input type="hidden" name="mode" value="" id="list-mode">
+            <div class="container-fluid" style="background-color: #fff;">
+                <h2>{{title}}</h2>
+                <div class="" style="width:100%;text-align:right"><a href="/admin/board_setting_form" class="btn btn-warning">게시판등록하기</a></div><br/>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" name="all" id="all" value=""></th>
+                            <th>번호</th>
+                            <th>게시판아이디</th>
+                            <th>게시판명</th>
+                            <th>스킨</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set i = 0 %}
+                        {% set no = pageData.totalCount - pageData.skipSize %}
+                        {% for row in row %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="chk[]" id="chk{{i}}" value="{{i}}">
+                                <input type="hidden" name="id[{{i}}]" value="{{row.id}}">
+                                <input type="hidden" name="f_bo_id[{{i}}]" value="{{row.bo_id}}">
+                            </td>
+                            <td>{{no}}</td>
+                            <td>
+                                {{row.bo_id}}
+                            </td>
+                            <td>{{row.bo_name}}</td>
+                            <td>
+                                <select name="bo_skin_path[{{i}}]" class="form-select">
+                                    {% for skins in skins %}
+                                    <option value="{{skins}}"{% if skins == row.bo_skin_path %} selected {% endif%}>{{skins}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <a href="/admin/board_setting_form/?mode=update&id={{row.id}}&field={{query.field}}&value={{query.value}}&page={{query.page}}">수정</a>
+                                <a href="javascript:;" onclick="boardRemove('{{row.id}}')">삭제</a>
+                            </td>
+                        </tr>
+                        {% set i = i + 1 %}
+                        {% set no = no -1 %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary" id="update-btn">수정</button>
+                <button type="button" class="btn btn-primary" id="remove-btn">삭제</button>
+                </form>
+                <!-- <button class="btn btn-danger" id="btn-remove" style="color:#fff">삭제</button> -->
+                <!-- 페이징 시작-->
+                <nav aria-label="Page navigation example">
+                    
+                    <ul class="pagination justify-content-center">
+                      {% if 1 < pageData.pageStart %}
+                      <li class="page-item disabled">
+                        <a class="page-link" href="?page={{pageData.pageStart - 10 }}&field={{query.field}}&value={{query.value}}" tabindex="-1" aria-disabled="true">Previous</a>
+                      </li>
+                      {% endif %}
+                      {% for page in range(pageData.pageStart-1,pageData.pageEnd) %}
+                      {% if page < pageData.pageTotal %}
+                      <li class="page-item {% if page+1 == pageData.page  %}active{% endif %}" {% if page+1 == pageData.page  %}aria-current="page"{% endif %}><a class="page-link" href="?page={{pageData.page+1}}&field={{query.field}}&value={{query.value}}">{{page+1}}</a></li>
+                      {% endif %}
+                      {% endfor %}
+                      {% if pageData.pageEnd < pageData.pageTotal %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{pageData.pageEnd+1}}&field={{query.field}}&value={{query.value}}">Next</a>
+                      </li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+                  <!-- 페이징 끝 -->
+                  <div class="">
+                   
+                    <form name="form" method="get" action="/admin/user_list">
+                        <input type="hidden" name="page" value="{{page}}">
+                        <div class="row">
+
+                        <div class="col-4">
+                            <select name="field" class="form-select">
+                                <option value="bo_id"{% if query.field === "bo_id"%} selected {% endif%}>게시판아이디</option>
+                                <option value="bo_name"{% if query.user_id === "bo_name"%} selected {% endif%}>이름</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" name="value" value="{{query.value}}" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary" type="submit">검색</button>
+                        </div>
+                        </div>
+                    </form>
+                  </div>
+
+                </div>
+            </div>
+            
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+
+        </div> 
+        
+{% endblock %}
+{% block script %}
+<script>
+    function boardRemove(id){
+        if(confirm("삭제하시겠습니까? 삭제하시면 게시판 복구는 불가능합니다.")){
+            $.ajax({
+                url:"/admin/board_setting_remove",
+                data:{id:id},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    console.log(data);
+                    if(data.is_success){
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+    $(()=>{
+        $("#all").click(()=>{
+            $("input[type=checkbox]").prop("checked",$("#all").prop("checked"));
+        });
+        $("#update-btn").click(() => {
+            if(confirm("선택하신 게시판 스킨을 변경하시겠습니까?")){
+                $("#list-mode").val("update");
+                $.ajax({
+                    url:"/admin/board_setting_list_update",
+                    type:"post",
+                    dataType:"json",
+                    data:$("#form-list").serialize(),
+                    success:function(data){
+                        if(data.is_success){
+                            location.reload();
+                        }
+                    }
+                })
+            }
+        });
+        $("#remove-btn").click(() => {
+            if(confirm("선택하신 게시판을 삭제하시겠습니까? 삭제하시면 모든 게시물들은 복구 불가능합니다.")){
+                $("#list-mode").val("remove");
+                $.ajax({
+                    url:"/admin/board_setting_list_update",
+                    type:"post",
+                    dataType:"json",
+                    data:$("#form-list").serialize(),
+                    success:function(data){
+                        if(data.is_success){
+                            location.reload();
+                        }
+                    }
+                })
+            }
+        });
+    })
+</script>
+{% endblock %}
+
+
+    
+</body>
+
+</html>

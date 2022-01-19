@@ -1,0 +1,216 @@
+{% extends "./layout.html" %}
+{% block style %}
+<style>
+.ck-editor__editable{
+    height:300px
+}
+</style>
+{% endblock %}
+{% block content%}    
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <h2>{{title}}</h2>
+                <form name="form" method="post" action="/admin/service_form" onsubmit="return formCheck()">
+                    <input type="hidden" name="mode" value="{{mode}}">
+                    <input type="hidden" name="page" value="{{query.page}}">
+                    <input type="hidden" name="field" value="{{query.field}}">
+                    <input type="hidden" name="value" value="{{query.value}}">
+                    <input type="hidden" name="id" value="{{query.id}}">
+                    <div class="mb-3">
+                        <label for="ca_code" class="form-label">분류</label>
+                        <select class="form-select" name="ca_code" id="ca_code" aria-label="Default select example" required>
+                            <option value="">분류선택</option>
+                            {% for categoryRow in categoryRow %}
+                            <option value="{{categoryRow.ca_code}}"{% if categoryRow.ca_code == row.ca_code %} selected {% endif %}>{{categoryRow.ca_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="service_name" class="form-label">서비스명</label>
+                        <input type="text" name="service_name" id="service_name" value="{{row.service_name}}" class="form-control" required placeholder="서비스명을 입력하세요"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="service_price" class="form-label">가격</label>
+                        <input type="number" name="service_price" id="service_price" value="{{row.service_price}}" class="form-control" required placeholder="가격을 입력하세요"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="service_info" class="form-label">서비스내용</label>
+                        <textarea name="service_info" id="service_info">{{row.service_info}}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        
+                        <div style="text-align:right">
+                            <button class="btn btn-primary" id="btn-option-add" type="button">추가하기</button>
+                            <button class="btn btn-danger" id="btn-option-remove" type="button">삭제하기</button>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>옵션명</th>
+                                    <th>가격</th>
+                                </tr>
+                            </thead>
+                            <tbody  id="table-option">
+                                
+                                {% if mode == "update" %}
+                                {% set no = 1 %}
+                                {% for optionRow in optionRow %}
+                                <tr>
+                                    <td>{{no}}</td>
+                                    <td><input type="text" name="option_name" value="{{optionRow.option_name}}" class="form-control"></td>
+                                    <td><input type="number" name="option_price" value="{{optionRow.option_price}}" class="form-control"></td>
+                                </tr>
+                                {% set no = no + 1 %}
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" name="option_name" value="" class="form-control"></td>
+                                    <td><input type="number" name="option_price" value="" class="form-control"></td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 첨부된 파일은 배열로 담아야 함-->
+                    
+                    {% set servicePhotos = [row.service_photo1,row.service_photo2,row.service_photo3,row.service_photo4,row.service_photo5]%}
+                    <div class="mb-3">
+                        <table class="table">
+                            <tbody>
+                                
+                                <tr>
+                                    {% for i in range(1,6)%}
+                                    <td align="center">
+                                       
+                                        <div class="service-photo" id="service-photo{{i}}" onclick='$("#fservice-photo{{i}}").click()'>
+                                        
+                                        
+                                        {% if servicePhotos[i-1] != undefined %}
+                                        <img src="/uploads/{{servicePhotos[i-1]}}" width="98" height="98" style="vertical-align: top;">
+                                        
+                                        {% else %}
+                                        +
+                                        {% endif %}
+                                        </div>
+                                        <input type="file" name="fservice_photo{{i}}" id="fservice-photo{{i}}" style="display:none" accept="image/*" onchange="photoUpload('{{i}}')">
+                                        <input type="hidden" name="service_photo{{i}}" value="{{servicePhotos[i-1]}}">
+                                        {{servicePhotos[i-1]}}
+                                        {% if servicePhotos[i-1] != undefined%}
+                                        <div  class="text-center">
+                                            <button type="button" class="btn btn-warning" id="btn-remove{{i}}" onclick="imageRemove('{{i}}')">삭제</button>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                              
+                                
+                            </tbody>
+                        </table>
+                    </div>               
+                    
+                    <div class="mb-3 form-check"">
+                        <div>목록 출력 여부</div>
+                        <input class="form-check-input" type="checkbox" value="1" id="service_status">
+                        <label class="form-check-label" for="service_status">출력함</label>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="submit">{{title}}</button>
+                        <a href="/admin/service_list/?field={{query.field}}&value={{query.value}}" class="btn btn-success">목록</a>
+                    </div>
+                </form>
+                
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+        </div> 
+{% endblock %}
+{% block script %}
+<script src="/js/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+	ClassicEditor
+		.create( document.querySelector( '#service_info' ),{
+            language:'ko',
+            ckfinder:{
+                uploadUrl:'/uploader/editor'
+            },
+            height:300
+        })
+		.then( editor => {
+			window.editor = editor;
+		})
+		.catch( error => {
+			console.error( 'There was a problem initializing the editor.', error );
+		});
+    function formCheck(){
+        
+    }   
+    $(function(){
+        let no = $("#table-option").find("tr").length;
+        //옵션추가
+        $("#btn-option-add").click(function(){
+            no++;
+            let strHtml="<tr>"+
+                            `<td>${no}</td>`+
+                            `<td><input type="text" name="option_name" value="" class="form-control"></td>`+
+                            `<td><input type="number" name="option_price" value="" class="form-control"></td>`+
+                        "</tr>";
+            $("#table-option").append(strHtml);
+        });
+        //옵션삭제
+        $("#btn-option-remove").click(function(){
+            if(no==1){
+                alert("더 이상 삭제를 할 수 없습니다.");
+                return;
+            }
+            $("#table-option").find("tr").last().remove();
+            no--;     
+        });
+    });     
+    //파일첨부하기
+    function photoUpload(no){
+        const formData= new FormData();
+        const file = document.getElementById(`fservice-photo${no}`);
+        formData.append("service_photo",file.files[0]);
+        formData.append("path","service");
+        console.log(formData);
+        $.ajax({
+            url:"/admin/photo_upload",
+            processData: false,
+            contentType: false,
+            data:formData,
+            type:"post",
+            dataType:"json",
+            success:function(data){
+                console.log(data);
+                $(`#service-photo${no}`).html(`<img src="/uploads/${data.file.filename}" width=98 height=98>`);
+                //$(`input[name="service_photo${no}]"`).val(data.file.filename);
+                document.getElementsByName(`service_photo${no}`)[0].value=data.file.filename;
+                console.log(data.file.path);
+            }
+        })
+    }
+    function imageRemove(no){
+        $(`#service-photo${no}`).html(`+`);
+        document.getElementsByName(`service_photo${no}`)[0].value="";
+        $(`#btn-remove${no}`).css("display","none");
+    }
+</script>
+{% endblock %}
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+{% extends "./layout.html" %}
+{% block style %}
+{% endblock %}
+{% block content%}    
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <h2>{{title}}</h2>
+                옵션
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>옵션명</th>
+                            <th>대수</th>
+                            <th>가격</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        {%
+                            for orderOptionRow in orderOptionRow
+                        %}
+                        <tr>
+                            <td>{{orderOptionRow.option_name}}</td>
+                            <td>{{orderOptionRow.option_ea}}</td>
+                            <td>{{orderOptionRow.option_price}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                
+                </table>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>
+                                서비스명
+                            </th>
+                            <td>
+                                {{row.service_name}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                예약자명
+                            </th>
+                            <td>
+                                {{row.user_name}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                예약자명
+                            </th>
+                            <td>
+                                {{row.user_name}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                예약자일
+                            </th>
+                            <td>
+                                {{row.service_date}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                상태
+                            </th>
+                            <td>
+                                <select name="service_status" onchange="serviceStatusChange('{{row.id}}',this.value)">
+                                    <option value="확인전"{% if row.service_status === "확인전" %} selected{% endif %}>확인전</option>
+                                    <option value="확인완료"{% if row.service_status === "확인완료" %} selected{% endif %}>확인완료</option>
+                                    <option value="서비스완료"{% if row.service_status === "서비스완료" %} selected{% endif %}>서비스완료</option>
+                                    <option value="취소"{% if row.service_status === "취소" %} selected{% endif %}>취소</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="">
+                <a href="/admin/order_list" class="btn btn-primary">목록보기</a>
+            </div>
+        </div> 
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    function serviceStatusChange(id,val){
+        console.log(id);
+        $.ajax({
+            url:"/admin/ajax_order_status/",
+            data:{id:id,service_status:val},
+            type:"post",
+            dataType:"json",
+            success:function(data){
+               console.log(data);
+               alert("상태가 변경되었습니다.");
+            },
+            error:function(request,status,error){
+                console.log("error");
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<header class="header">
+    <div class="menu" id="list-menu">
+        <i class="bi bi-list"></i>
+    </div>
+    <div class="title">
+        {{title}}
+    </div>
+</header>
+<!-- 사이드 바 메뉴 시작 -->
+<div class="side-bar" id="side-bar">
+    <!-- 로그인 시작-->
+    <div class="container-fluid user-info">
+        <div class="row">
+            <div class="col">
+                {% if user !== undefined and user.user_id !== undefined %}
+                <div class="user-name" style="color:#fff">{{user.user_name}}님이<br/><span style="font-size:11px">로그인하셨습니다.</span></div>
+                {% endif %}
+            </div>
+            <div class="col">
+                <div class="user-push"><i class="bi bi-bell-fill"></i></div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:15px">
+            <div class="col text-center" style="color:#fff">
+                {% if user === undefined and user.user_id === undefined %}
+                <a href="/app/user/login" style="color:#fff">로그인을 하십시오</a>
+                {% else %}
+                <a href="/app/user/logout" style="color:#fff">로그아웃</a>
+                <a href="/app/user/register/?mode=update" style="color:#fff">정보수정</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- 로그인 끝-->
+    <div class="container-fluid">
+        {% for category in category %}
+        <div class="row category">
+            <a href="/app/service/list/{{category.ca_code}}">{{category.ca_name}}</a>
+        </div>
+        {% endfor %}
+        <div class="row category">
+            <a href="/app/board/list/notice">공지사항</a>
+        </div>
+        <div class="row category">
+            <a href="/app/board/list/request">고객문의</a>
+        </div>
+        <div class="row category">
+            <a href="javascript:alert('현재 서비스 준비중입니다.')">이용후기</a>
+        </div>
+    </div>
+    <hr />
+    <div class="container-fluid">
+        <div class="row com-info">
+            제로브이<br />
+            TEL. {{info.com_tel}}<br />
+            FAX. {{info.com_fax}}<br />
+            E-mail: {{info.com_email}}<br />
+        </div>
+    </div>
+</div>
+<!-- 사이드 바 메뉴 끝 -->
+<!-- 사이드 바 메뉴 백그라운드 시작 -->
+<div class="side-bar-back" id="side-bar-back"></div>
+<!-- 사이드 바 메뉴 백그라운드 끝 -->
