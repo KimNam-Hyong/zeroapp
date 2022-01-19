@@ -12,6 +12,8 @@ const passport = require("passport");
 const passportConfig = require("./passport");
 const logger = require("./logger");
 const ip = require("ip");
+const helmet = require("helmet");
+const hpp = require("hpp");
 
 dotenv.config(); ////키값을 가져오는 기본 설정
 
@@ -84,6 +86,8 @@ app.use(async (req, res, next) => {
 });
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));
+  app.use(helmet());
+  app.use(hpp());
 } else {
   app.use(morgan("dev"));
 }
