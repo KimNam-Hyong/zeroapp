@@ -145,7 +145,4 @@ app.use((err, req, res, next) => {
   res.status(500).send(err.message); //500번 오류 메세지 보여주기
 });
 
-app.listen(app.get("port"), () => {
-  //기본 포트는 3000번
-  console.log(app.get("port"), "번 포트에서 대기중");
-});
+module.exports = app;
