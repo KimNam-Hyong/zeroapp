@@ -9,10 +9,10 @@ module.exports = {
     timezone: "+09:00",
     dateStrings: "true",
     pool: {
-      max: "1000",
-      min: "0",
-      acquire: "30000",
-      idle: "1000",
+      max: 1000,
+      min: 0,
+      acquire: 30000,
+      idle: 1000,
     },
   },
   test: {
