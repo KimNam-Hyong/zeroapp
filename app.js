@@ -14,8 +14,14 @@ const logger = require("./logger");
 const ip = require("ip");
 const helmet = require("helmet");
 const hpp = require("hpp");
+const redis = require("redis");
+const RedisStore = require("connect-redis")(session);
 
 dotenv.config(); ////키값을 가져오는 기본 설정
+const redisClient = redis.createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  password: process.env.REDIS_PASSWORD,
+});
 
 sequelize
   .sync({ force: false })
@@ -105,6 +111,7 @@ const sessionOption = session({
     httpOnly: true, //쿠키는 http 프로토콜에서만 쓰겠다 =>클라이언트에서 확인 못함
     secure: false, //보안처리 하지 않겠다 => https로 사용할 때는 반드시 true
   },
+  store: new RedisStore({ client: redisClient }),
 });
 if (process.env.NODE_ENV == "production") {
   sessionOption.proxy = true;
