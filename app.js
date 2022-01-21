@@ -11,7 +11,7 @@ const { sequelize, AppConfig, Category, BoardSetting } = require("./models");
 const passport = require("passport");
 const passportConfig = require("./passport");
 const logger = require("./logger");
-const ip = require("ip");
+
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
 const cors = require("cors");
@@ -71,7 +71,8 @@ const uploaderRouter = require("./routes/uploader");
 app.use(cors());
 //전역변수 지정하기
 app.use(async (req, res, next) => {
-  res.locals.ip = ip.address();
+  res.locals.ip =
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   try {
     res.locals.info = await AppConfig.findOne();
     res.locals.category = await Category.findAll();
