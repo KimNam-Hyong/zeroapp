@@ -16,21 +16,13 @@ const helmet = require("helmet");
 const hpp = require("hpp");
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
+const cors = require("cors");
 
 dotenv.config(); ////키값을 가져오는 기본 설정
 const redisClient = redis.createClient({
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
   password: process.env.REDIS_PASSWORD,
 });
-
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log("db 연결 성공");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 try {
   fs.readdirSync("uploads"); //uploads 디렉토리 가져오기
@@ -62,7 +54,14 @@ nunjucks.configure("views", {
   express: app, //express 프레임워크 어떤 객체로 쓸 것인지
   watch: true, //렌더링 할 것인지 말 것인지
 });
-
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("db 연결 성공");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 const installRouter = require("./routes/install");
 const appIndexRouter = require("./routes/app");
 const appUserRouter = require("./routes/app/user");
@@ -71,7 +70,7 @@ const adminRouter = require("./routes/admin");
 const appAuthRouter = require("./routes/app/auth");
 const uploaderRouter = require("./routes/uploader");
 /*const boardRouter = require("./routes/board");*/
-
+app.use(cors());
 //전역변수 지정하기
 app.use(async (req, res, next) => {
   res.locals.ip = ip.address();
@@ -98,7 +97,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(morgan("dev"));
 }
 
-app.use("/", express.static(path.join(__dirname, "public"))); // /public을 url주소 /로 해도 바로 접근이 가능하게
+app.use(express.static(path.join(__dirname, "public"))); // /public을 url주소 /로 해도 바로 접근이 가능하게
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //파일첨부 디렉토리 설정
 app.use(express.json()); //json을 사용한다
 app.use(express.urlencoded({ extended: true })); //url 인코드를 사용하지 않겠다.
