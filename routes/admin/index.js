@@ -34,7 +34,13 @@ router.use((req, res, next) => {
   res.locals.user = req.user;
   res.locals.token = req.cookies.token;
   res.locals.user_id = req.cookies.user_id;
-  console.log(user.user_level);
+  try {
+    console.log(user);
+    console.log(user.user_level);
+  } catch (error) {
+    console.error(error);
+  }
+
   next();
 });
 //GET / 라우터
