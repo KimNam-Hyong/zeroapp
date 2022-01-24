@@ -9,3 +9,27 @@
 a {
   color: #333;
 }
+
+.bo_subject {
+  font-weight: bold;
+  color: #000;
+  font-size: 1.5em;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+}
+
+.bo_date {
+  color: #333;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+.bo_content {
+  float: left;
+  background-color: rgb(228, 228, 228);
+  width: 100%;
+  min-height: 400px;
+  color: #333;
+  font-size: 1.3em;
+  padding: 10px;
+  box-shadow: #ccc 5px 5px 5px;
+}

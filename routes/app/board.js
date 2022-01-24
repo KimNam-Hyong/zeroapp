@@ -10,12 +10,12 @@ router.use((req, res, next) => {
   next();
 });
 //GET 게시판 목록
-router.get("/list/:bo_id", async (req, res) => {
+router.get("/:bo_id/list", async (req, res) => {
   console.log("상품목록페이지");
   res.render("./app/board/list", { title: "에어컨 목록페이지" });
 });
 //GET 게시판 상세페이지
-router.get("/view/:bo_id", async (req, res) => {
+router.get("/:bo_id/view/:id", async (req, res) => {
   console.log("상품상세페이지");
   res.render("./app/board/view", { title: "에어컨종합세척설명" }); // 가져올 html파일 , 데이터
 });

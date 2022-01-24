@@ -1,0 +1,67 @@
+{% extends "../../layout.html" %}
+{% block style %}
+<style>
+    .ck-editor__editable{
+        height:300px
+    }
+    a:hover{
+        color:#333;
+    }
+    a{
+        color:#333;
+    }
+</style>
+{% endblock %}
+{% block content%}
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+           
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+           
+            <div class="container-fluid" style="background-color: #fff;">
+                <h2>{{title}}</h2>
+                <div class="bo_subject">
+                    {{row.bo_subject}}
+                </div>
+                <div class="bo_date">
+                    {{row.createdAt.toString() | date("YYYY-MM-DD hh:mm:ss")}}
+                </div>
+                <div class="bo_content">
+                    {% for file in fileRow %}
+                    {% if 'image' in file.mimetype %}
+                    <img src="/uploads/{{file.file_name}}" width="80%">
+                    {% endif %}
+                    {% endfor %}
+                    {{row.bo_content| escape | nl2br }}
+                </div>
+                
+                <!-- <button class="btn btn-danger" id="btn-remove" style="color:#fff">삭제</button> -->
+                <div class="">
+                    <a href="/admin/{{bsRow.bo_id}}/list" class="btn btn-primary">목록보기</a>
+                </div>
+            </div>
+           
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+
+        </div> 
+        
+{% endblock %}
+{% block script %}
+<script>
+    $(function(){
+    })
+    
+</script>
+{% endblock %}
+
+
+    
+</body>
+
+</html>

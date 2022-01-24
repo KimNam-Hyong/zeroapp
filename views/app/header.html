@@ -27,6 +27,9 @@
                 {% else %}
                 <a href="/app/user/logout" style="color:#fff">로그아웃</a>
                 <a href="/app/user/register/?mode=update" style="color:#fff">정보수정</a>
+                {% if user.user_level == 10 %}
+                <a href="/admin/" style="color:#fff">관리자모드</a>
+                {% endif %}
                 {% endif %}
             </div>
         </div>

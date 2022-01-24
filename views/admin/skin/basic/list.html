@@ -17,11 +17,9 @@
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
-           
             <!-- ============================================================== -->
             <!-- Container fluid  -->
             <!-- ============================================================== -->
-           
             <div class="container-fluid" style="background-color: #fff;">
                 <h2>{{title}}</h2>
                 <div class="" style="width:100%;text-align:right"><a href="/admin/{{bo_id}}/form" class="btn btn-warning">등록하기</a></div><br/>
@@ -33,6 +31,7 @@
                             <th>제목</th>
                             <th>글쓴이</th>
                             <th>글쓴날짜</th>
+                            <th>관리</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,6 +51,13 @@
                             </td>
                             <td>{{row.user_name}}</td>
                             <td>{{row.createdAt.toString()}}</td>
+                           
+                            <td>
+                                <a href="/admin/{{row.f_bo_id}}/form/?mode=update&id={{row.id}}">수정</a> / 
+                                <a href="javascript:;" onclick="categoryRemove('{{row.id}}')">삭제</a>
+                            </td>
+
+                            
                         </tr>
                         {% set i = i + 1 %}
                         {% set no = no -1 %}
@@ -79,6 +85,7 @@
                       {% endif %}
                     </ul>
                   </nav>
+                  <button class="btn btn-danger" id="btn-remove" style="color:#fff">삭제</button>
                   <!-- 페이징 끝 -->
                   <div class="">
                     <form name="form" method="get" action="/admin/user_list">
@@ -87,8 +94,8 @@
 
                         <div class="col-4">
                             <select name="field" class="form-select">
-                                <option value="user_id"{% if query.field === "user_id"%} selected {% endif%}>아이디</option>
-                                <option value="user_name"{% if query.user_id === "user_name"%} selected {% endif%}>이름</option>
+                                <option value="bo_subject"{% if query.field === "bo_subject"%} selected {% endif%}>제목</option>
+                                <option value="bo_content"{% if query.user_id === "bo_content"%} selected {% endif%}>내용</option>
                             </select>
                         </div>
                         <div class="col-4">
@@ -100,6 +107,7 @@
                         </div>
                     </form>
                   </div>
+                 
                 </div>
             </div>
             
@@ -112,9 +120,52 @@
 {% endblock %}
 {% block script %}
 <script>
+    //전체체크하기 삭제할 때 필요함
     $(function(){
-    })
-    
+        $("#all").click(function(){
+            $("input[type=checkbox]").prop("checked",($(this).prop("checked")));
+        });
+        $("#btn-remove").click(function(){
+            if(confirm("체크한 게시물을 삭제하시겠습니까? 삭제하시면 복구는 불가능합니다.")){
+                let idArr=new Array();
+                for(let i=0;i<$("input[name='chk[]']").length;i++){
+                    if($("input[name='chk[]']").eq(i).prop("checked")){
+                        const no = $("input[name='chk[]']").eq(i).val();
+                        idArr.push($(`input[name="id[${no}]`).val());
+                    }
+                }
+                const params = {idx:idArr,mode:"list"};
+                
+                $.ajax({
+                    url:"/admin/board_remove",
+                    data:{ids:idArr.toString(),mode:"list"},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data.success){
+                            location.reload();
+                        }
+                    }
+                })
+            }
+        });
+    });
+    //개별삭제하기
+    function categoryRemove(id){
+        if(confirm("삭제하시겠습니까? 삭제하시면 복구는 불가능합니다.")){
+            $.ajax({
+                url:"/admin/board_remove",
+                data:{id:id},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    if(data.success){
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
 </script>
 {% endblock %}
 

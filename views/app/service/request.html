@@ -29,7 +29,7 @@
                         <input type="hidden" name="order_option_price[{{loop.index - 1}}]" id="order-option-price{{loop.index}}" value="0">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1" onclick="countOption('-','{{loop.index}}')">-</span>
-                            <input type="text" id="option-ea{{loop.index}}" name="option_ea[{{loop.index - 1}}]" class="form-control" value="1" aria-label="Username" aria-describedby="basic-addon1" style="width:20px;flex:.2 0 auto">
+                            <input type="text" id="option-ea{{loop.index}}" name="option_ea[{{loop.index - 1}}]" class="form-control" value="1" aria-label="Username" aria-describedby="basic-addon1" readonly style="width:20px;flex:.2 0 auto">
                             <span class="input-group-text" id="basic-addon1" onclick="countOption('+','{{loop.index}}')">+</span>
                         </div>
                     </td>

@@ -23,7 +23,7 @@ router.get("/list/:ca_code", async (req, res, next) => {
   console.log("상품목록페이지");
   try {
     console.log(req.params.ca_code);
-    let sql = `select *,date_format(createdAt,'%Y-%m-%d') as createdAt from service where ca_code='${req.params.ca_code}'`;
+    let sql = `select *,date_format(createdAt,'%Y-%m-%d') as createdAt,format(service_price,0) as service_price from service where ca_code='${req.params.ca_code}'`;
     const row = await sequelize.query(sql, {
       nest: true,
     });

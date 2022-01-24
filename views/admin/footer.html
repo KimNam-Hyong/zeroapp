@@ -15,3 +15,26 @@
 <!-- ============================================================== -->
 <!-- End Wrapper -->
 <!-- ============================================================== -->
+<script type="text/javascript">
+
+    let uuid=`{{ip}}`;
+    //자동로그인을 할 때 필요
+    window.onload=function(){
+        //아이피로 토큰값 비교해서 자동로그인을 할 수 있게
+        $.ajax({
+            url:"/app/auth/token",
+            dataType:"json",
+            type:"POST",
+            data:{
+                uuid:uuid
+            },
+            success:function(data){
+                console.log(data);
+                if(data.is_refresh){
+                    location.reload();
+                }
+            }
+        });
+    }
+
+</script>

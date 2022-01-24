@@ -15,6 +15,7 @@ const requestIp = require("request-ip"); // 클라이언트 아이피 가져오�
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
 const cors = require("cors");
+const dateFilter = require("nunjucks-date-filter");
 
 dotenv.config(); ////키값을 가져오는 기본 설정
 const redisClient = redis.createClient({
@@ -28,30 +29,17 @@ try {
   console.error("uplaods 디렉토리가 없어 uploads 디렉토리를 생성합니다.");
   fs.mkdirSync("uploads");
 }
-const upload = multer({
-  storage: multer.diskStorage({
-    //하드 디스크 저장하겠다는 함수
-    destination(req, file, done) {
-      //어디에 저장을 할 것인지
-      done(null, "uploads/"); //uploads에 저장 지정 => filename 함수로 이동
-    },
-    filename(req, file, done) {
-      //파일명을 뭘로 할것인지
-      const ext = path.extname(file.originalname); //확장자만 가져오기
-      done(null, path.basename(file.originalname, ext) + Date.now() + ext); //원본파일명 뒤에 현재시간을 넣어서 파일저장하기
-    },
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 }, //5MB 제한두기
-});
+
 const app = express(); //익스프레스를 사용
 passportConfig();
 app.set("port", process.env.PORT || 3000); // 포트 번호 설정 process.env파일에 PORT를 가져오거나 또는 3000번 포트로 설정
 app.set("view engine", "html");
 //views에 있는 파일을 가져오겠다는 설정
-nunjucks.configure("views", {
+let viewEngine = nunjucks.configure("views", {
   express: app, //express 프레임워크 어떤 객체로 쓸 것인지
   watch: true, //렌더링 할 것인지 말 것인지
 });
+viewEngine.addFilter("date", dateFilter);
 sequelize
   .sync({ force: false })
   .then(() => {
@@ -129,6 +117,7 @@ app.use((req, res, next) => {
   error.status = 404;
   logger.info("hello");
   logger.error(error.message);
+  res.redirect("/app");
   next(); //다음 미들웨어에 검수하기
 });
 

@@ -11,11 +11,11 @@ const adminBoardSettingControllers = require("../../controllers/admin.boardsetti
 const adminBoardControllers = require("../../controllers/admin.board.controllers");
 const multer = require("multer");
 const path = require("path");
+const sharp = require("sharp"); //썸네일을 할 때 필요함
 const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
       console.log("file");
-      console.log(req.request);
       cb(null, "uploads/");
     },
     filename(req, file, cb) {
@@ -34,12 +34,6 @@ router.use((req, res, next) => {
   res.locals.user = req.user;
   res.locals.token = req.cookies.token;
   res.locals.user_id = req.cookies.user_id;
-  try {
-    console.log(user);
-    console.log(user.user_level);
-  } catch (error) {
-    console.error(error);
-  }
 
   next();
 });
@@ -204,10 +198,36 @@ router.post(
 router.get("/:bo_id/list", adminBoardControllers.getBoardList);
 /* GET 게시판 폼 페이지 */
 router.get("/:bo_id/form", adminBoardControllers.getBoardForm);
-
-/* 파일첨부 기능 넣기 */
+/* GET 게시판 상세보기 */
+router.get("/:bo_id/view/:id", adminBoardControllers.getBoardView);
+/* POST 게시판 폼 인서트 및 업데이트 */
+router.post("/:bo_id/form", adminBoardControllers.postBoardForm);
+/* POST 게시판 삭제 */
+router.post("/board_remove", adminBoardControllers.postBoardRemove);
+/* 사진첨부 기능 넣기 */
 router.post("/photo_upload", upload.single("service_photo"), (req, res) => {
   console.log(req.file);
   res.json({ file: req.file });
+});
+router.post("/file_upload", upload.single("bo_file"), (req, res) => {
+  console.log(req.file);
+  try {
+    //썸네일 할 때 필요로 함
+    const imageExtArray = [".jpeg", ".jpg", ".gif", "png"];
+    //이미지 확장자명만 썸네일 시키기
+    if (-1 < imageExtArray.indexOf(path.extname(req.file.originalname))) {
+      sharp(req.file.path)
+        .resize({ width: 640 })
+        .withMetadata()
+        .toFile(`uploads/thumb_${req.file.filename}`, (err, info) => {
+          if (err) throw err;
+        });
+    }
+
+    console.log(req.file);
+    //console.log(path.extname(req.file.originalname));
+
+    res.json(req.file);
+  } catch (error) {}
 });
 module.exports = router;
