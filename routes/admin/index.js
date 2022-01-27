@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { AppConfig, Category, User, sequelize } = require("../../models");
-const base_convert = require("locutus/php/math/base_convert");
-const bcrypt = require("bcrypt");
+const { AppConfig, sequelize } = require("../../models");
 const adminUserControllers = require("../../controllers/admin.user.controllers");
 const adminCategoryControllers = require("../../controllers/admin.category.controllers");
 const adminServiceControllers = require("../../controllers/admin.service.controllers");
@@ -209,6 +207,19 @@ router.post("/photo_upload", upload.single("service_photo"), (req, res) => {
   console.log(req.file);
   res.json({ file: req.file });
 });
+
+/* 소켓 연결 시키기 */
+router.post("/socket", async (req, res, next) => {
+  try {
+    const io = req.app.get("io");
+    await io.of("/service").emit("adminJoin", { user_id: req.body.user_id });
+    res.json({ is_socket: true });
+  } catch (error) {
+    console.log(`error1:${error}`);
+    res.json({ is_socket: false, msg: error });
+  }
+});
+
 router.post("/file_upload", upload.single("bo_file"), (req, res) => {
   console.log(req.file);
   try {

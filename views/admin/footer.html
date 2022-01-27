@@ -12,14 +12,42 @@
     <!-- End Page wrapper  -->
     <!-- ============================================================== -->
 </div>
+
 <!-- ============================================================== -->
 <!-- End Wrapper -->
 <!-- ============================================================== -->
+<script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
+    //소켓통신 하기
+    const socket = io.connect('http://localhost:3000/service',{
+        path:'/socket.io'
+    });
+    socket.on("servicePush",(data) => {
+        let strHtml='<div class="service-push" style="position:fixed;z-index:9999;bottom:0;width:100%;border:1px solid #000;height:100px;background-color:#fff;display:none">';
+            strHtml+=data.msg
+            strHtml+=`<br/><a href="${data.href}" class="btn btn-primary">확인하기</a></div>`;
+        $("body").append(strHtml);
+        setInterval(()=>{
+            
+            $(".service-push").fadeIn();
+        },500);
+        
+    });
+    
 
     let uuid=`{{ip}}`;
     //자동로그인을 할 때 필요
     window.onload=function(){
+        //관리자 소켓 연결 시키기
+        $.ajax({
+            url:"/admin/socket",
+            data:{user_id:`{{user.user_id}}`},
+            type:"POST",
+            dataType:"json",
+            success:function(data){
+               console.log(data);
+            }
+        });
         //아이피로 토큰값 비교해서 자동로그인을 할 수 있게
         $.ajax({
             url:"/app/auth/token",

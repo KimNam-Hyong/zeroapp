@@ -46,6 +46,7 @@
     "sequelize-cli": "^6.3.0",
     "session-memory-store": "^1.0.0",
     "sharp": "^0.29.3",
+    "socket.io": "^4.4.1",
     "uuid": "^8.3.2",
     "winston": "^3.4.0"
   },

@@ -11,13 +11,13 @@ module.exports = class UserToken extends Sequelize.Model {
           defaultValue: "", //디폴트 값
         },
         access_token: {
-          type: Sequelize.STRING(255),
+          type: Sequelize.TEXT,
           allowNull: true,
           comment: "액세스 토큰 값",
           defaultValue: "",
         },
         refresh_token: {
-          type: Sequelize.STRING(255),
+          type: Sequelize.TEXT,
           allowNull: true,
           comment: "갱신 토큰 값",
           defaultValue: "",

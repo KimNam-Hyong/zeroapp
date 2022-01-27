@@ -1,0 +1,113 @@
+{% extends "../../layout.html" %}
+{% block style %}
+<style>
+    .ck-editor__editable{
+        height:300px
+    }
+    a:hover{
+        color:#333;
+    }
+    a{
+        color:#333;
+    }
+</style>
+{% endblock %}
+{% block content%}
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <h2>{{title}}</h2>
+                <form name="form" method="post" action="/app/board/{{bsRow.bo_id}}/form">
+                    <input type="hidden" name="mode" value="{{query.mode}}">
+                    <input type="hidden" name="page" value="{{query.page}}">
+                    <input type="hidden" name="field" value="{{query.field}}">
+                    <input type="hidden" name="value" value="{{query.value}}">
+                    <input type="hidden" name="id" value="{{query.id}}">
+                    <input type="hidden" name="f_bo_id" value="{{bsRow.bo_id}}">
+                    <input type="hidden" name="user_id" value="{{row.user_id if row.user_id else user.user_id }}">
+                    <div class="mb-3">
+                        <label for="bo_id" class="form-label">제목</label>
+                        <input type="text" name="bo_subject" id="bo_subject" value="{{row.bo_subject}}" class="form-control" required placeholder="제목을 입력하세요"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">이름</label>
+                        <input type="text" name="user_name" id="user_name" value="{{row.user_name if row.user_name else user.user_name }}" class="form-control" required placeholder="이름을 입력하세요"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">내용</label>
+                        <textarea name="bo_content" id="bo_content" required class="form-control" rows="5">{{row.bo_content}}</textarea>
+                    </div>
+                    <!-- 파일첨부 시작-->
+                    <div class="mb-3 files">
+                        <ul>
+                            {% for i in range(0,bsRow.bo_file_ea) %}
+                            <li>
+                                <input type="hidden" name="file_id" value="{{fileRow[loop.index-1].id}}">
+                                <input type="file" id="bo_file{{loop.index}}" name="bo_file[]" value="" class="form-control" onchange="fileUpload('{{loop.index}}')">
+                                <input type="hidden" name="file_path[]" value="{{fileRow[loop.index-1].file_path}}" id="file_path{{loop.index}}">
+                                <input type="hidden" name="file_thum_path[]" value="" id="file_thum_path{{loop.index}}">
+                                <input type="hidden" name="file_name[]" value="{{fileRow[loop.index-1].file_name}}" id="file_name{{loop.index}}">
+                                <input type="hidden" name="file_size[]" value="{{fileRow[loop.index-1].file_size}}" id="file_size{{loop.index}}">
+                                <input type="hidden" name="mimetype[]" value="{{fileRow[loop.index-1].mimetype}}" id="mimetype{{loop.index}}">
+                                <div id="file{{loop.index}}">
+                                {{
+                                    fileRow[loop.index-1].file_name
+                                }}
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="submit">{{title}}</button>
+                        <a href="/admin/{{bsRow.bo_id}}/list/?field={{query.field}}&value={{query.value}}" class="btn btn-success">목록</a>
+                    </div>
+                </form>
+                </div>
+           
+            </div>
+            
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+
+        </div> 
+        
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    function fileUpload(no){
+        const formData= new FormData();
+        const file = document.getElementById(`bo_file${no}`);
+        formData.append("bo_file",file.files[0]);
+        console.log(formData);
+        $.ajax({
+            url:"/app/board/file_upload",
+            processData: false,
+            contentType: false,
+            data:formData,
+            type:"post",
+            dataType:"json",
+            success:function(data){
+                console.log(data);
+                document.getElementById("file_path"+no).value=data.path;
+                document.getElementById("file_name"+no).value=data.filename;
+                document.getElementById("file_size"+no).value=data.size;
+                document.getElementById("mimetype"+no).value=data.mimetype;
+                const path = data.path;
+                if(-1 < data.mimetype.indexOf("image")){
+                    document.getElementById("file_thum_path"+no).value='uploads/thumb_'+data.filename;
+                    document.getElementById("file"+no).innerHTML="<img src='/"+path+"' width=200>";
+                }else{
+                    document.getElementById("file"+no).innerHTML=data.filename;
+                }
+            }
+        })
+    }
+</script>
+{% endblock %}

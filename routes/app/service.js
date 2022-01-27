@@ -142,6 +142,13 @@ router.post("/request", async (req, res, next) => {
           option_price: option_price,
         });
       }
+      const io = req.app.get("io");
+      await io
+        .of("/service")
+        .emit("servicePush", {
+          msg: `${req.body.user_name}님이 예약신청을 하였습니다.`,
+          href: "/admin/order_list",
+        });
       res.redirect(`/app/service/request_result/${req.body.order_no}`);
     });
   } catch (error) {

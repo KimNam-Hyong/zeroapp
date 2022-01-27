@@ -1,0 +1,43 @@
+{% extends "../../layout.html" %}
+{% block style %}
+<style>
+    .ck-editor__editable{
+        height:300px
+    }
+    a:hover{
+        color:#333;
+    }
+    a{
+        color:#333;
+    }
+</style>
+{% endblock %}
+{% block content%}    
+<div class="container-fluid" style="background-color: #fff;">
+    <h2>{{title}}</h2>
+    <div class="board_subject">
+        {{row.bo_subject}}
+    </div>
+    <div class="board_date">
+        {{row.createdAt.toString() | date("YYYY-MM-DD hh:mm:ss")}}
+    </div>
+    <div class="board_content">
+        {% for file in fileRow %}
+        {% if 'image' in file.mimetype %}
+        <img src="/uploads/{{file.file_name}}" width="80%">
+        {% endif %}
+        {% endfor %}
+        {{row.bo_content| escape | nl2br }}
+    </div>
+    
+    <!-- <button class="btn btn-danger" id="btn-remove" style="color:#fff">삭제</button> -->
+    <div class="">
+        <a href="/app/board/{{bsRow.bo_id}}/list" class="btn btn-primary">목록보기</a>
+    </div>
+</div>   
+{% endblock %}
+{% block script %}
+<script>
+   
+</script>
+{% endblock %}

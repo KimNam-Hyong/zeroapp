@@ -29,6 +29,7 @@ router.post("/auth", async (req, res, next) => {
           {
             type: "ACCESS",
             user_id: req.body.user_id,
+            user_level: row.user_level,
           },
           process.env.ACCESS_TOKEN_SECRET,
           {
@@ -58,6 +59,7 @@ router.post("/auth", async (req, res, next) => {
           if (result) {
             //세션 지정하기
             req.login(row, () => {
+              res.cookie("uuid", req.body.uuid); //고유 아이피 또는 디바이스 값을 쿠키로 구움
               return res.json({ success: true, msg: "" });
             });
           }
@@ -78,7 +80,6 @@ router.post("/auth", async (req, res, next) => {
 //POST 토큰값 확인하기
 router.post("/token", async (req, res, next) => {
   try {
-    console.log("토큰1");
     const row = await sequelize.query(
       `select * from user_token where uuid='${req.body.uuid}' order by id desc limit 1`,
       {
@@ -97,6 +98,9 @@ router.post("/token", async (req, res, next) => {
     const userRow = await User.findOne({
       where: { user_id: row[0].user_id },
     });
+    console.log("token : " + accessToken);
+    res.cookie("uuid", req.body.uuid); //고유 아이피 또는 디바이스 값을 쿠키로 구움
+    //토큰값이 살아 있을 때
     if (typeof req.user.user_id !== "undefined") {
       res.json({ is_login: true, is_refresh: false, msg: "" });
     } else {
@@ -114,6 +118,9 @@ router.post("/token", async (req, res, next) => {
           nest: true,
         }
       );
+      const userRow = await User.findOne({
+        where: { user_id: row[0].user_id },
+      });
       if (row.length != 0) {
         //리프레시 토큰값 살아 있으면
         req.decoded = jwt.verify(
@@ -128,6 +135,7 @@ router.post("/token", async (req, res, next) => {
             {
               type: "ACCESS",
               user_id: row[0].user_id,
+              user_level: userRow.user_level,
             },
             process.env.ACCESS_TOKEN_SECRET,
             {
@@ -159,10 +167,9 @@ router.post("/token", async (req, res, next) => {
             }
           );
           console.log(updateRow);
-          const userRow = await User.findOne({
-            where: { user_id: row[0].user_id },
-          });
+
           req.login(userRow, () => {
+            res.cookie("uuid", req.body.uuid); //고유 아이피 또는 디바이스 값을 쿠키로 구움
             return res.json({ is_login: true, is_refresh: true, msg: "" });
           });
         }

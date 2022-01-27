@@ -16,6 +16,9 @@ const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
 const cors = require("cors");
 const dateFilter = require("nunjucks-date-filter");
+const webSocket = require("./socket.js");
+const helmet = require("helmet");
+const hpp = require("hpp");
 
 dotenv.config(); ////키값을 가져오는 기본 설정
 const redisClient = redis.createClient({
@@ -55,6 +58,7 @@ const appServiceRouter = require("./routes/app/service");
 const adminRouter = require("./routes/admin");
 const appAuthRouter = require("./routes/app/auth");
 const uploaderRouter = require("./routes/uploader");
+const boardRouter = require("./routes/app/board");
 /*const boardRouter = require("./routes/board");*/
 app.use(cors());
 //전역변수 지정하기
@@ -64,6 +68,7 @@ app.use(async (req, res, next) => {
     res.locals.info = await AppConfig.findOne();
     res.locals.category = await Category.findAll();
     res.locals.boardSettingRow = await BoardSetting.findAll();
+
     //게시판 스킨 배열
     let skins = [];
     fs.readdir("./views/app/skin/", (err, data) => {
@@ -77,6 +82,8 @@ app.use(async (req, res, next) => {
 });
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));
+  app.use(helmet());
+  app.use(hpp());
 } else {
   app.use(morgan("dev"));
 }
@@ -100,9 +107,15 @@ if (process.env.NODE_ENV == "production") {
   sessionOption.proxy = true;
 }
 app.use(session(sessionOption));
-
 app.use(passport.initialize()); //패스포트 초기 설정
 app.use(passport.session()); //패스포트 세션 설정
+//뒤로가기를 할 때 이전 페이지는 초기화가 되게
+app.use((req, res, next) => {
+  res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
+  res.header("Expires", "-1");
+  res.header("Pragma", "no-cache");
+  next();
+});
 app.use("/app", appIndexRouter);
 app.use("/app/user", appUserRouter);
 app.use("/app/service", appServiceRouter);
@@ -110,6 +123,7 @@ app.use("/app/auth", appAuthRouter);
 app.use("/install", installRouter);
 app.use("/admin", adminRouter);
 app.use("/uploader", uploaderRouter);
+app.use("/app/board", boardRouter);
 
 app.use((req, res, next) => {
   console.log("모든 요청에 다 실행됩니다.");
@@ -126,7 +140,10 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.locals.message = err.message;
   res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
-  res.status(500).send(err.message); //500번 오류 메세지 보여주기
+  //res.status(500).send(err.message); //500번 오류 메세지 보여주기
+});
+const server = app.listen(app.get("port"), () => {
+  console.log(app.get("port"), "번 포트에서 대기중");
 });
 
-module.exports = app;
+webSocket(server, app, sessionOption);

@@ -12,7 +12,7 @@
             <div class="container-fluid">
                 <h2>{{title}}</h2>
                 <form name="form" method="post" action="/admin/user_form" class="row g-3 needs-validation" novalidate onsubmit="return formCheck()">
-                    <input type="hidden" name="mode" value="{{mode}}">
+                    <input type="hidden" name="mode" value="{{query.mode}}">
                     <input type="hidden" name="page" value="{{query.page}}">
                     <input type="hidden" name="field" value="{{query.field}}">
                     <input type="hidden" name="value" value="{{query.value}}">

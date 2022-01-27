@@ -41,15 +41,11 @@
             <a href="/app/service/list/{{category.ca_code}}">{{category.ca_name}}</a>
         </div>
         {% endfor %}
+        {% for boardSettingRow in boardSettingRow %}
         <div class="row category">
-            <a href="/app/board/list/notice">공지사항</a>
+            <a href="/app/board/{{boardSettingRow.bo_id}}/list" aria-expanded="false">{{boardSettingRow.bo_name}}</a>
         </div>
-        <div class="row category">
-            <a href="/app/board/list/request">고객문의</a>
-        </div>
-        <div class="row category">
-            <a href="javascript:alert('현재 서비스 준비중입니다.')">이용후기</a>
-        </div>
+        {% endfor %}
     </div>
     <hr />
     <div class="container-fluid">

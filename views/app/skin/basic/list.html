@@ -1,0 +1,39 @@
+{% extends "../../layout.html" %}
+{% block style %}
+<style>
+    .ck-editor__editable{
+        height:300px
+    }
+    a:hover{
+        color:#333;
+    }
+    a{
+        color:#333;
+    }
+</style>
+{% endblock %}
+{% block content%}    
+<div class="container-fluid">
+    {% for row in row %}
+    <div class="row  board-list" onclick="location.href='/app/board/{{bsRow.bo_id}}/view/{{row.id}}';">
+        <div class="col-11">
+            <div class="board-subject">{{row.bo_subject}}</div>
+            <div class="board-date">{{row.createdAt | date("YYYY-MM-DD")}}</div>
+        </div>
+        <div class="col-1 board-arrow"><i class="bi bi-chevron-right"></i></div>
+    </div>
+    {% endfor %}
+</div>   
+{%
+    if bsRow.bo_write_level <= user.user_level     
+%} 
+<div class="board-write-floating">
+    <a href="/app/board/{{bsRow.bo_id}}/form">+</a>
+</div>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script>
+   
+</script>
+{% endblock %}
