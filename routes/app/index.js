@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
   if (row[0].cnt == 0) {
     res.redirect("/install");
   } else {
-    res.render("./app/index", { title: "제로브이" }); // 가져올 html파일 , 데이터
+    res.render("./app/index", { title: "제로브이", index: true }); // 가져올 html파일 , 데이터
   }
   //토큰값이 있고 유저값이 있으면
   /*if (

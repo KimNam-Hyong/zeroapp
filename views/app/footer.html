@@ -1,7 +1,5 @@
 <footer>
-    
         <div class="col-md-12 text-center">
-
             [{{info.company}}] <br/>
             대표자명 : {{info.com_ceo}} | 사업자등록번호 : {{info.com_bizno}}<br/>
 
@@ -12,11 +10,39 @@
         </div>
   
 </footer>
+<div class="footer-menu">
+    <ul>
+        <li><a href="/app"><div><i class="fas fa-home"></i></div><div>홈</div></a></li>
+        <li>
+            {% if user !== undefined and user.user_id !== undefined %}
+            <a href="/app/mypage/service/list/ing"><div><i class="far fa-user"></i></div><div>내 예약</div></a>
+            {% else %}
+            <a href="/app/user/login"><div><i class="far fa-user"></i></div><div>로그인</div></a>
+            {% endif %}
+        </li>
+        <li><a href=""><div><i class="fas fa-ellipsis-h"></i></div><div>더 보기</div></a></li>
+    </ul>
+</div>
 <script src="/js/main.js"></script>
 <script>
     let uuid=`{{ip}}`;
+    //디바이스 아이디
+    function setDeviceId(did){
+        uuid=did;
+		if($("#uuid")!=undefined){
+			$("#uuid").val(did);
+		}
+		autoLogin();
+    }
     //자동로그인을 할 때 필요
     window.onload=function(){
+		if (navigator.userAgent.match(/zerovapp/i)){
+		}else{
+			autoLogin();
+		}
+    }
+    //자동로그인을 할 때 필요
+    function autoLogin(){
         //아이피로 토큰값 비교해서 자동로그인을 할 수 있게
         $.ajax({
             url:"/app/auth/token",

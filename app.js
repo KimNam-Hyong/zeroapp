@@ -53,6 +53,7 @@ sequelize
   .catch((err) => {
     console.log(err);
   });
+
 const installRouter = require("./routes/install");
 const appIndexRouter = require("./routes/app");
 const appUserRouter = require("./routes/app/user");

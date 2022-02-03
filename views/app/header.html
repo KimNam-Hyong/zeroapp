@@ -1,11 +1,21 @@
+{%
+    if index
+%}
 <header class="header">
-    <div class="menu" id="list-menu">
-        <i class="bi bi-list"></i>
-    </div>
     <div class="title">
         {{title}}
     </div>
 </header>
+{%
+    else
+%}
+<header class="header">
+    <div class="back"><i class="fas fa-chevron-left" onclick="history.back();"></i></div>
+    <div class="title">{{title}}</div>
+</header>
+{%
+    endif
+%}
 <!-- 사이드 바 메뉴 시작 -->
 <div class="side-bar" id="side-bar">
     <!-- 로그인 시작-->
