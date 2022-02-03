@@ -1,0 +1,42 @@
+{% extends "../layout.html" %}
+{% block style %}
+{% endblock %}
+{% block content%}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>{{title}}</h2>
+        </div>
+    </div>
+    
+	<div class="row">
+		<div class="tab-menu">
+			<ul>
+				<li class="{% if params.status === 'ing' %}active{% endif %}" onclick="location.href='/app/mypage/service/list/ing';">예약중인 서비스</li>
+				<li class="{% if params.status === 'finish' %}active{% endif %}" onclick="location.href='/app/mypage/service/list/finish';">완료된 서비스</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		{% for row in row %}
+		<div class="order-list" onclick="location.href='/app/mypage/service/view/?order_no={{row.order_no}}'">
+			<div class="order-service-name">{{row.service_name}}</div>
+			<div class="order-date-time">{{row.createdAt|date("YYYY-MM-DD hh:mm:ss")}}</div>
+			<div class="order-price">{{row.service_price|format(',')}}원</div>
+			<div class="order-status">{{row.service_status}}</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+	$(function(){
+		$(".tab-menu ul li").click(function(){
+			$(".tab-menu ul li").removeClass("active");
+			$(".tab-menu ul li").eq($(this).index()).addClass("active");
+		});
+	});
+</script>
+{% endblock %}

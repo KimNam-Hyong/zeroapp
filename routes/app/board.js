@@ -33,13 +33,13 @@ router.get("/:bo_id/list", verifyToken, async (req, res, next) => {
   try {
     console.log(`req.decoded.user_level : ${req.decoded}`);
     let user_level = req.decoded != undefined ? req.decoded.user_level : 1;
+    const bsRow = await BoardSetting.findOne({
+      where: { bo_id: req.params.bo_id },
+    });
     if (user_level < bsRow.bo_list_level) {
       alert("목록을 볼 수 있는 권한이 없습니다.", res);
       return;
     }
-    const bsRow = await BoardSetting.findOne({
-      where: { bo_id: req.params.bo_id },
-    });
 
     const limit = bsRow.bo_list_su; //목록 갯수
     const page = 1;
@@ -60,6 +60,7 @@ router.get("/:bo_id/list", verifyToken, async (req, res, next) => {
       bsRow,
       bo_id: req.params.bo_id,
       query: req.query,
+      user_level: user_level,
     });
   } catch (error) {
     console.error(error);
@@ -69,13 +70,14 @@ router.get("/:bo_id/list", verifyToken, async (req, res, next) => {
 router.get("/:bo_id/view/:id", verifyToken, async (req, res) => {
   try {
     let user_level = req.decoded != undefined ? req.decoded.user_level : 1;
+    const bsRow = await BoardSetting.findOne({
+      where: { bo_id: req.params.bo_id },
+    });
     if (user_level < bsRow.bo_view_level) {
       alert("상세보기 볼 수 있는 권한이 없습니다.", res);
       return;
     }
-    const bsRow = await BoardSetting.findOne({
-      where: { bo_id: req.params.bo_id },
-    });
+
     const row = await Board.findOne({
       where: { f_bo_id: req.params.bo_id, id: req.params.id },
     });
@@ -87,6 +89,7 @@ router.get("/:bo_id/view/:id", verifyToken, async (req, res) => {
       bsRow: bsRow,
       row: row,
       fileRow: fileRow,
+      user_level: user_level,
     });
   } catch (error) {
     console.error(error);
@@ -96,13 +99,14 @@ router.get("/:bo_id/view/:id", verifyToken, async (req, res) => {
 router.get("/:bo_id/form", verifyToken, async (req, res, next) => {
   try {
     let user_level = req.decoded != undefined ? req.decoded.user_level : 1;
-    if (user_level < bsRow.bo_view_level) {
-      alert("등록 및 수정을 할 수 있는 권한이 없습니다.", res);
-      return;
-    }
     const bsRow = await BoardSetting.findOne({
       where: { bo_id: req.params.bo_id },
     });
+    if (user_level < bsRow.bo_write_level) {
+      alert("등록 및 수정을 할 수 있는 권한이 없습니다.", res);
+      return;
+    }
+
     if (req.query.mode == "update") {
       const row = await Board.findOne({
         where: { f_bo_id: req.params.bo_id, id: req.query.id },

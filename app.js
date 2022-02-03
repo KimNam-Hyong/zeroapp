@@ -15,7 +15,8 @@ const requestIp = require("request-ip"); // 클라이언트 아이피 가져오�
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
 const cors = require("cors");
-const dateFilter = require("nunjucks-date-filter");
+const dateFilter = require("nunjucks-date-filter"); //YYYY-mm-dd 표시하기
+const numberFilter = require("locutus/php/strings/number_format");
 const webSocket = require("./socket.js");
 const helmet = require("helmet");
 const hpp = require("hpp");
@@ -43,6 +44,7 @@ let viewEngine = nunjucks.configure("views", {
   watch: true, //렌더링 할 것인지 말 것인지
 });
 viewEngine.addFilter("date", dateFilter);
+viewEngine.addFilter("format", numberFilter);
 sequelize
   .sync({ force: false })
   .then(() => {
@@ -59,6 +61,7 @@ const adminRouter = require("./routes/admin");
 const appAuthRouter = require("./routes/app/auth");
 const uploaderRouter = require("./routes/uploader");
 const boardRouter = require("./routes/app/board");
+const mypageRouter = require("./routes/app/mypage");
 /*const boardRouter = require("./routes/board");*/
 app.use(cors());
 //전역변수 지정하기
@@ -124,6 +127,7 @@ app.use("/install", installRouter);
 app.use("/admin", adminRouter);
 app.use("/uploader", uploaderRouter);
 app.use("/app/board", boardRouter);
+app.use("/app/mypage", mypageRouter);
 
 app.use((req, res, next) => {
   console.log("모든 요청에 다 실행됩니다.");
