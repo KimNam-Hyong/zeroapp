@@ -6,8 +6,12 @@ const {
   ServiceOption,
   ServiceOrder,
   ServiceOrderOption,
+  User,
+  UserFcm,
 } = require("../../models");
 const router = express.Router();
+const fcm_push = require("../../module/fcm_push");
+require("dotenv").config();
 //const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
@@ -17,6 +21,21 @@ router.use((req, res, next) => {
   res.locals.token = req.cookies.token;
   res.locals.user_id = req.cookies.user_id;
   next();
+});
+//GET 상품 분류 페이지
+router.get("/category", async (req, res, next) => {
+  try {
+    const row = await Category.findAll({
+      order: [["ca_code", "desc"]],
+    });
+    console.log(`category${row}`);
+    res.render("./app/service/category", {
+      title: `예약하기`,
+      row: row,
+    });
+  } catch (error) {
+    console.error(`error-${error}`);
+  }
 });
 //GET 상품 목록
 router.get("/list/:ca_code", async (req, res, next) => {
@@ -105,6 +124,7 @@ router.get("/request_result/:order_no", async (req, res, next) => {
 router.post("/request", async (req, res, next) => {
   try {
     console.log(req.body.chk);
+
     const row = await Service.findOne({
       where: {
         id: req.body.service_id,
@@ -143,12 +163,41 @@ router.post("/request", async (req, res, next) => {
         });
       }
       const io = req.app.get("io");
-      await io
-        .of("/service")
-        .emit("servicePush", {
-          msg: `${req.body.user_name}님이 예약신청을 하였습니다.`,
-          href: "/admin/order_list",
+      await io.of("/service").emit("servicePush", {
+        msg: `${req.body.user_name}님이 예약신청을 하였습니다.`,
+        href: "/admin/order_list",
+      });
+
+      //푸시보내기 실행
+      //관리자 전체 보내기
+      const userRow = await User.findAll({
+        where: {
+          user_level: 10,
+        },
+      });
+      //관리자 아이디로 푸시 토큰값 전부 다 가져오기
+      let tokens = new Array();
+      for (let i = 0; i < userRow.length; i++) {
+        var sql = `select * from user_fcm where user_id='${userRow[i].user_id}' and push_status='Y'`;
+        var fcmRow = await sequelize.query(sql, {
+          nest: true,
         });
+        for (let j = 0; j < fcmRow.length; j++) {
+          if (fcmRow[j].fcm_token != undefined) {
+            tokens.push(fcmRow[0].fcm_token);
+          }
+        }
+      }
+      //푸시를 보내기
+      for (let f = 0; f < tokens.length; f++) {
+        fcm_push(
+          req,
+          "제로브이 서비스 예약",
+          `${req.body.user_name}님이 서비스 예약을 하였습니다.`,
+          tokens[f],
+          `${process.env.PUSH_URL}admin/order_list`
+        );
+      }
       res.redirect(`/app/service/request_result/${req.body.order_no}`);
     });
   } catch (error) {

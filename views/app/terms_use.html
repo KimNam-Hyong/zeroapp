@@ -1,0 +1,17 @@
+{% extends "./layout.html" %}
+{% block style %}
+<link rel="stylesheet" href="/css/swiper-bundle.min.css"/>
+<style>
+    #content img{
+      width:100%
+    }
+</style>
+{% endblock %}
+{% block content%}
+<div class="container" style="overflow-x:scroll" id="content">
+    {{row.com_use_terms| escape | nl2br}}
+</div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

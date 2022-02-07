@@ -69,7 +69,7 @@ module.exports = class UserToken extends Sequelize.Model {
           comment: "통신판매업번호",
           defaultValue: "",
         },
-        com_private: {
+        com_privacy: {
           type: Sequelize.TEXT("long"),
           allowNull: true,
           comment: "개인정보처리방침",

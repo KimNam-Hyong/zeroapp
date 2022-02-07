@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { sequelize, AppConfig } = require("../../models");
+const { sequelize, AppConfig, UserFcm } = require("../../models");
 //const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
@@ -35,9 +35,69 @@ router.get("/", async (req, res) => {
     res.render("index", { title: "Express" }); // 가져올 html파일 , 데이터
   }*/
 });
-
-router.get("/about", (req, res) => {
-  res.render("about"); // 가져올 html파일 , 데이터
+//GET 회사소개
+router.get("/company", async (req, res) => {
+  const row = await AppConfig.findOne({
+    attributes: ["com_info"],
+  });
+  res.render("./app/company", { title: "회사소개", row: row }); // 가져올 html파일 , 데이터
+});
+//GET 더보기
+router.get("/more", async (req, res) => {
+  res.render("./app/more", { title: "더보기" }); // 가져올 html파일 , 데이터
+});
+//GET 개인정보처리 방침
+router.get("/privacy", async (req, res) => {
+  const row = await AppConfig.findOne({
+    attributes: ["com_privacy"],
+  });
+  res.render("./app/privacy", { title: "개인정보처리방침", row: row }); // 가져올 html파일 , 데이터
+});
+//GET 이용약관
+router.get("/terms_use", async (req, res) => {
+  const row = await AppConfig.findOne({
+    attributes: ["com_use_terms"],
+  });
+  res.render("./app/terms_use", { title: "개인정보처리방침", row: row }); // 가져올 html파일 , 데이터
+});
+//POST 토큰값 설정하기
+router.post("/set_fcm_token", async (req, res, next) => {
+  try {
+    const row = await UserFcm.findAndCountAll({
+      where: {
+        user_id: req.body.user_id,
+      },
+    });
+    console.log(row);
+    if (req.body.user_id == "") {
+      res.json({ fcm: false });
+    } else {
+      if (row.count == 0) {
+        await UserFcm.create({
+          user_id: req.body.user_id,
+          fcm_token: req.body.fcm_token,
+          deviceId: req.body.deviceId,
+          push_status: "Y",
+        });
+      } else {
+        await UserFcm.update(
+          {
+            user_id: req.body.user_id,
+            fcm_token: req.body.fcm_token,
+            push_status: "Y",
+          },
+          {
+            where: {
+              deviceId: req.body.deviceId,
+            },
+          }
+        );
+      }
+      res.json({ fcm: true });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 module.exports = router;

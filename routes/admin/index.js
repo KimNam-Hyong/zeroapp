@@ -80,7 +80,7 @@ router.post("/setting", async (req, res, next) => {
       com_info,
       com_bizno,
       com_networkno,
-      com_private,
+      com_privacy,
       com_use_terms,
     } = req.body;
     if (row.length == 0) {
@@ -96,7 +96,7 @@ router.post("/setting", async (req, res, next) => {
         com_info,
         com_bizno,
         com_networkno,
-        com_private,
+        com_privacy,
         com_use_terms,
       });
     } else {
@@ -113,7 +113,7 @@ router.post("/setting", async (req, res, next) => {
           com_info,
           com_bizno,
           com_networkno,
-          com_private,
+          com_privacy,
           com_use_terms,
         },
         {

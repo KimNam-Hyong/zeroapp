@@ -1,0 +1,18 @@
+{% extends "../layout.html" %}
+{% block style %}
+{% endblock %}
+{% block content%}
+<div class="container"  style="height:calc(100% - 180px)">
+    <div class="category-box">
+        <ul>
+        {% for row in row %}
+        <li onclick="location.href='/app/service/list/{{row.ca_code}}';">{{row.ca_name}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}
+
+

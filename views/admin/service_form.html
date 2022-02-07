@@ -94,7 +94,7 @@
                                         <div class="service-photo" id="service-photo{{i}}" onclick='$("#fservice-photo{{i}}").click()'>
                                         
                                         
-                                        {% if servicePhotos[i-1] != undefined %}
+                                        {% if servicePhotos[i-1] != "" and  servicePhotos[i-1] != undefined%}
                                         <img src="/uploads/{{servicePhotos[i-1]}}" width="98" height="98" style="vertical-align: top;">
                                         
                                         {% else %}
@@ -104,7 +104,7 @@
                                         <input type="file" name="fservice_photo{{i}}" id="fservice-photo{{i}}" style="display:none" accept="image/*" onchange="photoUpload('{{i}}')">
                                         <input type="hidden" name="service_photo{{i}}" value="{{servicePhotos[i-1]}}">
                                         {{servicePhotos[i-1]}}
-                                        {% if servicePhotos[i-1] != undefined%}
+                                        {% if servicePhotos[i-1] != "" and  servicePhotos[i-1] != undefined %}
                                         <div  class="text-center">
                                             <button type="button" class="btn btn-warning" id="btn-remove{{i}}" onclick="imageRemove('{{i}}')">삭제</button>
                                         </div>

@@ -1,9 +1,9 @@
-document.querySelector("#list-menu").addEventListener("click", async () => {
+/*document.querySelector("#list-menu").addEventListener("click", async () => {
   $("#side-bar").animate({
     left: "0%",
   });
   $("#side-bar-back").css("display", "block");
-});
+});*/
 
 document.querySelector("#side-bar-back").addEventListener("click", async () => {
   $("#side-bar").animate({

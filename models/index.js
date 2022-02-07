@@ -3,6 +3,7 @@ const env = process.env.NODE_ENV || "development";
 const config = require("../config/config")[env];
 const User = require("./user");
 const UserToken = require("./user_token");
+const UserFcm = require("./user_fcm");
 const AppConfig = require("./appconfig");
 const Category = require("./category");
 const Service = require("./service");
@@ -26,6 +27,7 @@ const sequelize = new Sequelize(
 db.sequelize = sequelize;
 db.User = User; //db 모델명 설정
 db.UserToken = UserToken;
+db.UserFcm = UserFcm;
 db.AppConfig = AppConfig;
 db.Category = Category;
 db.Service = Service;
@@ -49,9 +51,11 @@ BoardSetting.init(sequelize);
 Board.init(sequelize);
 BoardComment.init(sequelize);
 BoardFile.init(sequelize);
+UserFcm.init(sequelize);
 
 User.associate(db); //회원테이블을 다른 테이블 연결할 수 있게
 UserToken.associate(db);
+UserFcm.associate(db);
 AppConfig.associate(db);
 Category.associate(db);
 Service.associate(db);
