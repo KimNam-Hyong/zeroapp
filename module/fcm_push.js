@@ -19,7 +19,9 @@ const push = async (req, subject, msg, tokens, url) => {
       .messaging()
       .send(message)
       .then((result) => {})
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err);
+      });
   } catch (error) {
     console.error(error);
   }

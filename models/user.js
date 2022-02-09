@@ -100,6 +100,17 @@ module.exports = class User extends Sequelize.Model {
           comment: "회원레벨",
           defaultValue: 2,
         },
+        user_email_status: {
+          type: Sequelize.ENUM("Y", "N"),
+          allowNull: false,
+          comment: "이메일인증",
+          defaultValue: "N",
+        },
+        removeAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+          comment: "탈퇴일",
+        },
       },
       {
         sequelize,

@@ -33,7 +33,7 @@ router.post("/auth", async (req, res, next) => {
           },
           process.env.ACCESS_TOKEN_SECRET,
           {
-            expiresIn: "1m",
+            expiresIn: "1 days",
             issuer: "제로브이 액세스토큰",
           }
         );
@@ -139,7 +139,7 @@ router.post("/token", async (req, res, next) => {
             },
             process.env.ACCESS_TOKEN_SECRET,
             {
-              expiresIn: "1m",
+              expiresIn: "1 days",
               issuer: "제로브이 액세스토큰",
             }
           );

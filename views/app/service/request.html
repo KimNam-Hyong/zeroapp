@@ -66,7 +66,7 @@
 
         <div class="mb-3">
             <label for="user-name" class="form-label">예약날짜</label>
-            <input type="date" name="service_date1" id="service_date1" value="" class="form-control" required placeholder="예약날짜를 선택하세요"/>
+            <input type="text" name="service_date1" id="service_date1" value="" class="form-control" required placeholder="예약날짜를 선택하세요"/>
         </div>
         <div class="mb-3">
             <label for="user-name" class="form-label">예약시간</label>
@@ -94,6 +94,23 @@
 {% block script %}
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
+    $.datepicker.setDefaults({
+        dateFormat: 'yy-mm-dd',
+        prevText: '이전 달',
+        nextText: '다음 달',
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        showMonthAfterYear: true,
+        yearSuffix: '년',
+        minDate: "+3D"
+    });
+
+    $(function() {
+        $("#service_date1").datepicker();
+    });
     //옵션 카운팅 하기 체크된 것만 카운팅이 되게 
     function countOption(type,no){
         if(document.getElementsByName("chk[]")[no-1].checked){

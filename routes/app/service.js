@@ -9,8 +9,11 @@ const {
   User,
   UserFcm,
 } = require("../../models");
+
 const router = express.Router();
 const fcm_push = require("../../module/fcm_push");
+const scheduler = require("../../module/scheduler");
+const moment = require("moment");
 require("dotenv").config();
 //const jwt = require("jsonwebtoken");
 
@@ -123,6 +126,7 @@ router.get("/request_result/:order_no", async (req, res, next) => {
 //POST 서비스 예약 신청
 router.post("/request", async (req, res, next) => {
   try {
+    moment.tz.setDefault("Asia/Seoul");
     console.log(req.body.chk);
 
     const row = await Service.findOne({
@@ -198,6 +202,46 @@ router.post("/request", async (req, res, next) => {
           `${process.env.PUSH_URL}admin/order_list`
         );
       }
+      /* 고객한테 보내는 푸시 스케줄러 */
+      let service_date1 =
+        moment(req.body.service_date1).subtract(3, "d").format("YYYY-MM-DD") +
+        req.body.service_date2; //삼일전
+      let service_date2 =
+        moment(req.body.service_date1).subtract(1, "d").format("YYYY-MM-DD") +
+        req.body.service_date2; //하루전
+      var data = {
+        subject: `${req.body.user_name}님 ${req.body.service_date1}에 ${req.body.service_date2}에 방문 서비스가 있습니다`,
+        url: `${process.env.PUSH_URL}/mypage/service/list/ing`,
+      };
+      const tokenRow1 = await UserFcm.findOne({
+        where: {
+          user_id: req.body.user_id,
+        },
+      });
+      console.log(tokenRow1);
+      scheduler(req, data, service_date1, tokenRow1.fcm_token); //3일전 고객 푸시보내기
+      scheduler(req, data, service_date2, tokenRow1.fcm_token); //1일전 고객 푸시보내기
+
+      /* 관리자한테 보내는 푸시 스케줄러 */
+      data = {
+        name: req.body.user_name,
+        subject: `관리자님 ${req.body.user_name}님의 ${req.body.service_date1}에 ${req.body.service_date2}에 방문 서비스가 있습니다`,
+        url: `${process.env.PUSH_URL}/admin/order_list`,
+      };
+      const AdminRow = await User.findAll({
+        where: { user_level: 10 },
+      });
+      for (let a = 0; a < AdminRow.length; a++) {
+        const tokenRow2 = await UserFcm.findOne({
+          where: {
+            user_id: AdminRow[a].user_id,
+          },
+        });
+        scheduler(req, data, service_date1, tokenRow2.fcm_token); //3일전 고객 푸시보내기
+        scheduler(req, data, service_date2, tokenRow2.fcm_token); //1일전 고객 푸시보내기
+        scheduler(req, data, "2022-02-09 13:18:00", tokenRow2.fcm_token); //1일전 고객 푸시보내기
+      }
+
       res.redirect(`/app/service/request_result/${req.body.order_no}`);
     });
   } catch (error) {

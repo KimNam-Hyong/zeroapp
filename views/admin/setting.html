@@ -69,7 +69,7 @@
                         <label for="floatingInput">통신판매업번호</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" id="com_privacy" name="com_privacy"  style="height:300px">{{row.com_privacy}}</textarea>
+                        <textarea class="form-control" id="com_private" name="com_private"  style="height:300px">{{row.com_private}}</textarea>
                         <label for="floatingInput">개인정보처리방침</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -88,23 +88,28 @@
         </div> 
 {% endblock %}
 {% block script %}
-<script src="/js/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+<script src="/js/ckeditor/ckeditor.js"></script>
+
+
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-	ClassicEditor
-		.create( document.querySelector( '#com_info' ),{
-            language:'ko',
-            ckfinder:{
-                uploadUrl:'/uploader/editor'
-            },
-            height:300
-        })
-		.then( editor => {
-			window.editor = editor;
-		})
-		.catch( error => {
-			console.error( 'There was a problem initializing the editor.', error );
-		});
+    //이미지 첨부 필요할 때 이거를 쓰면 됨
+    CKEDITOR.plugins.addExternal( 'colorbutton', '/js/ckeditor/plugins/colorbutton/', 'plugin.js' );
+    CKEDITOR.editorConfig = function( config ) { 
+        config.language = 'ko'; 
+        config.extraPlugins = 'colorbutton'; 
+    };
+
+
+
+    CKEDITOR.replace('com_info', {
+        filebrowserUploadUrl:'/uploader/editor',
+        resize_enaleb : false,
+        enterMode : CKEDITOR.ENTER_BR,
+        shiftEnterMode : CKEDITOR.ENTER_P,
+        allowedContent :true,
+    });
+
     // 우편번호 찾기 화면을 넣을 element
 var element_layer = document.getElementById('layer1');
 function closeDaumPostcode() {

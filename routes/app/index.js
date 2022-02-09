@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { sequelize, AppConfig, UserFcm } = require("../../models");
+const scheduler = require("../../module/scheduler");
+const moment = require("moment");
 //const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
@@ -12,6 +14,19 @@ router.use(async (req, res, next) => {
 });
 //GET / 라우터
 router.get("/", async (req, res) => {
+  let service_date1 =
+    moment("2022-02-09").subtract(1, "d").format("YYYY-MM-DD") + " 17:42:00"; //삼일전
+  console.log(service_date1);
+  var data = {
+    subject: `스케줄러테스트`,
+    url: `${process.env.PUSH_URL}/mypage/service/list/ing`,
+  };
+  scheduler(
+    req,
+    data,
+    service_date1,
+    "fSyo8iVuQm2-ANQeD5w1rL:APA91bF287sjD24AqqQbjS9XwJCOsf58WhTfzO1-yS9fwCkWmJXsY0adn_s_vcs4gxj2wGHLqYoyrXMXzU7QS7kFJHm-rydu8fnlUnTVpvM75DjmmSvxkCV3OZ9Q0jLxg30KD_0qppi_"
+  );
   const row = await sequelize.query(
     "select count(*) as cnt from users where user_level='10'",
     {

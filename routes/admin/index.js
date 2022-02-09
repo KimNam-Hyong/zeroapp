@@ -239,6 +239,8 @@ router.post("/file_upload", upload.single("bo_file"), (req, res) => {
     //console.log(path.extname(req.file.originalname));
 
     res.json(req.file);
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 });
 module.exports = router;
