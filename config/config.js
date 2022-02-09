@@ -1,10 +1,10 @@
 require("dotenv").config();
 module.exports = {
   development: {
-    username: "root",
+    username: "admin",
     password: process.env.DB_PASSWORD,
     database: "zerov",
-    host: "127.0.0.1",
+    host: "database-1.cool8w9ibmyq.ap-northeast-2.rds.amazonaws.com",
     dialect: "mysql",
     timezone: "+09:00",
     dateStrings: "true",
@@ -16,10 +16,10 @@ module.exports = {
     },
   },
   test: {
-    username: "root",
+    username: "admin",
     password: process.env.DB_PASSWORD,
     database: "zerov",
-    host: "127.0.0.1",
+    host: "database-1.cool8w9ibmyq.ap-northeast-2.rds.amazonaws.com",
     dialect: "mysql",
     timezone: "+09:00",
     pool: {
@@ -30,10 +30,10 @@ module.exports = {
     },
   },
   production: {
-    username: "root",
+    username: "admin",
     password: process.env.DB_PASSWORD,
     database: "zerov",
-    host: "127.0.0.1",
+    host: "database-1.cool8w9ibmyq.ap-northeast-2.rds.amazonaws.com",
     dialect: "mysql",
     timezone: "+09:00",
     pool: {
