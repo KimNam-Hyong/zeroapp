@@ -75,7 +75,14 @@
         </div>
         <div>
             <button class="btn btn-primary" type="submit">회원가입</button>
+			{%
+				if user.user_id != undefined and user!=undefined
+			%}
             <a href="/app/user/logout" class="btn btn-success">로그아웃</a>
+			<a href="javascript:;" id="remove-btn" class="btn btn-warning"> 회원탈퇴</a>
+			{%
+				endif
+			%}
         </div>
     </form>
 </div>
@@ -85,8 +92,13 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
 
-//아이디 중복체크하기
 $(() => {
+	$("#remove-btn").click(()=>{
+		if(confirm("회원탈퇴하시겠습니까?")){
+			
+		}
+	});
+	//아이디 중복체크하기
     $("#user-id").blur(() => {
         const mode = document.getElementsByName("mode")[0].value;
         if(mode==""){

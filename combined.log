@@ -508,3 +508,27 @@
 {"level":"error","message":"POST /app/auth/token 라우터가 없습니다."}
 {"level":"info","message":"hello"}
 {"level":"error","message":"GET /favicon.ico 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET / 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /favicon.ico 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /admin/plugins/bower_components/chartist/dist/chartist.min.js.map 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /admin/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css.map 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /admin/plugins/bower_components/chartist/dist/chartist.min.js.map 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /admin/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css.map 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /admin/plugins/bower_components/chartist/dist/chartist.min.js.map 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /uploads/16440336005561644385972987.jpg 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /uploads/20220124_1023001644304397539.jpg 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /uploads/151644225521286.jpg 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /uploads/IMG_5119_21643951864135.jpg 라우터가 없습니다."}
+{"level":"info","message":"hello"}
+{"level":"error","message":"GET /admin/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css.map 라우터가 없습니다."}
